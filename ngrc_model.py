@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  1 15:47:43 2023
+# ngrc_model.py
 
-@author: zmzhai
-"""
+
 import torch
 import torch.nn as nn
 

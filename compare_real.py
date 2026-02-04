@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 22 08:28:25 2024
-
-@author: zmzhai
-"""
+# compare_real.py
 
 import numpy as np
 import torch
@@ -14,7 +9,7 @@ from load_tasks import ReadTasks
 import pickle
 from sklearn.preprocessing import MinMaxScaler
 
-def load_population_data(file_path: str = './real_data/long_series.pkl') -> dict:
+def load_population_data(file_path: str = './data_real/long_series.pkl') -> dict:
     """Load the saved population data"""
     with open(file_path, 'rb') as f:
         return np.load(f, allow_pickle=True).item()

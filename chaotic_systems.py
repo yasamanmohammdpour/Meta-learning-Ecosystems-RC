@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 15 09:23:45 2023
+# chaotic_systems.py
 
-@author: zmzhai
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint

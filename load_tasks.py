@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  1 09:32:04 2023
-
-@author: zmzhai
-"""
+# load_tasks.py
 
 import os
 import pickle

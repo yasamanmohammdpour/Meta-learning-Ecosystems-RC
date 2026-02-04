@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  1 14:26:58 2023
-
-@author: zmzhai
-"""
+# fnn_main.py
 
 import torch
 import torch.nn as nn

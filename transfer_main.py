@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 22 14:46:45 2025
-
-@author: zmzhai
-"""
+# transfer_main.py
 
 import torch
 import torch.nn as nn

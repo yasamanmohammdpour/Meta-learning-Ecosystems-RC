@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue May 16 09:26:17 2023
-
-@author: zmzhai
-"""
+# save_chaos.py
 
 import numpy as np
 import pickle

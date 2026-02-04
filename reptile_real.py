@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 21 09:38:00 2024
-
-@author: zmzhai
-"""
+# Reptile_real.py
 
 import torch
 import torch.nn as nn

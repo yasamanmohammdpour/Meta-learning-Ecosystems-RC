@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 31 09:33:31 2023
+# reptile_main.py
 
-@author: zmzhai
-"""
 import os
 import torch
 import torch.nn as nn

@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun  2 16:37:43 2023
-
-@author: zmzhai
-"""
+# utils.py
 
 import numpy as np
 import copy

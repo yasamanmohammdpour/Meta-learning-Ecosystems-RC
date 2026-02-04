@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 20 16:02:40 2024
-
-@author: zmzhai
-"""
+# fnn_real.py
 
 import torch
 import torch.nn as nn
