@@ -1,18 +1,18 @@
 # rc_model.py
-
 import torch
 import torch.nn as nn
 
 
 class Reservoir(nn.Module):
     """
-    Exact PyTorch replica of func_rc_train_val reservoir.
-
-    - Fixed W_in and A
+    OPTIMIZED PyTorch Reservoir Computing model.
+    
+    Key features:
+    - Fixed W_in and A (not trained)
     - Sparse symmetric reservoir
     - Spectral radius scaling
-    - Leaky integrator
-    - Trainable W_out only
+    - Leaky integrator dynamics
+    - Trainable W_out only (via ridge regression)
     """
 
     def __init__(
@@ -39,9 +39,13 @@ class Reservoir(nn.Module):
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.alpha = alpha
+        
+        # Pre-compute constants for speed
+        self.register_buffer("alpha_tensor", torch.tensor(alpha, device=device, dtype=dtype))
+        self.register_buffer("one_minus_alpha", torch.tensor(1.0 - alpha, device=device, dtype=dtype))
 
         # --------------------------------------------------
-        # W_in ~ Uniform[-W_in_a, W_in_a]
+        # W_in ~ Uniform[-w_in_scale, w_in_scale]
         # --------------------------------------------------
         W_in = w_in_scale * (
             2.0 * torch.rand(self.n, input_dim, device=device, dtype=dtype) - 1.0
@@ -69,7 +73,7 @@ class Reservoir(nn.Module):
         self.register_buffer("A", A)
 
         # --------------------------------------------------
-        # Trainable readout (Wout)
+        # Trainable readout (W_out)
         # --------------------------------------------------
         self.W_out = nn.Linear(
             self.n, output_dim, bias=False, device=device, dtype=dtype
@@ -82,29 +86,30 @@ class Reservoir(nn.Module):
             "r", torch.zeros(self.n, device=device, dtype=dtype)
         )
 
-    # ======================================================
-    # State handling
-    # ======================================================
     def reset_state(self):
+        """Reset reservoir state to zero."""
         self.r.zero_()
 
-    # ======================================================
-    # One-step reservoir update
-    # EXACT match to:
-    # r_new = (1-α) r + α tanh(A r + W_in x)
-    # ======================================================
     @torch.no_grad()
     def step(self, x: torch.Tensor) -> torch.Tensor:
-        x = x.to(device=self.device, dtype=self.dtype)
-
-        self.r.mul_(1.0 - self.alpha).add_(
-            self.alpha * torch.tanh(self.A @ self.r + self.W_in @ x)
+        """
+        One-step reservoir update: r = (1-α)r + α*tanh(A*r + W_in*x)
+        OPTIMIZED: No clone, pre-computed constants
+        """
+        if x.device != self.device or x.dtype != self.dtype:
+            x = x.to(device=self.device, dtype=self.dtype)
+        
+        # Compute: A @ r + W_in @ x
+        Ar = self.A @ self.r
+        Win_x = self.W_in @ x
+        
+        # Update in-place
+        self.r.mul_(self.one_minus_alpha).add_(
+            self.alpha_tensor * torch.tanh(Ar + Win_x)
         )
+        
+        return self.r
 
-        return self.r.clone()
-
-    # ======================================================
-    # Readout
-    # ======================================================
     def readout(self, r: torch.Tensor) -> torch.Tensor:
+        """Apply readout layer to reservoir state(s)."""
         return self.W_out(r)
